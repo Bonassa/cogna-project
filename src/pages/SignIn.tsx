@@ -1,6 +1,6 @@
 
-import { useState } from 'react';
-import { Link } from 'react-router-dom';
+import { FormEvent, useState } from 'react';
+import { Link, useHistory } from 'react-router-dom';
 import { CheckedState } from '@radix-ui/react-checkbox';
 
 import { Logo } from '../svgs/Logo';
@@ -15,6 +15,12 @@ import { Button } from '../components/Button';
 
 export function SignIn(){
   const [checkboxValue, setCheckboxValue] = useState<CheckedState>(false);
+  const history = useHistory();
+
+  function handleSubmit(event : FormEvent){
+    event.preventDefault();
+    history.push('/home');
+  }
 
   return(
     <div className="bg-gray-900 w-[100vw] h-[100vh] flex items-center justify-center">
@@ -26,7 +32,7 @@ export function SignIn(){
           </Heading>
         </header>
 
-        <form className='flex flex-col gap-4'>
+        <form className='flex flex-col gap-4' onSubmit={handleSubmit}>
           <label htmlFor='email' className='flex flex-col gap-3'>
             <Text>Endereço de e-mail</Text>
 
@@ -59,7 +65,7 @@ export function SignIn(){
             </Text>
           </div>
 
-          <Button.Root className='mt-6'>
+          <Button.Root type='submit' className='mt-6'>
             <Button.Label value='Acessar a plataforma' />
           </Button.Root>
         </form>

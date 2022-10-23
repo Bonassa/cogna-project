@@ -1,9 +1,11 @@
 
 import { InputHTMLAttributes, ReactNode } from 'react';
 import { Slot } from '@radix-ui/react-slot';
+import { clsx } from 'clsx';
 
 export interface TextInputRootProps {
   children: ReactNode;
+  className?: string;
 }
 
 export interface TextInputIconProps {
@@ -13,10 +15,13 @@ export interface TextInputIconProps {
 export interface TextInputInputProps extends InputHTMLAttributes<HTMLInputElement> {} 
 
 
-function TextInputRoot({ children } : TextInputRootProps) {
+function TextInputRoot({ children, className } : TextInputRootProps) {
   return (
     <div 
-      className='flex items-center gap-3 py-4 px-4 h-12 bg-gray-800 rounded w-full focus-within:ring-2 ring-purple-500'
+      className={clsx(
+        'flex items-center gap-3 py-4 px-4 h-12 bg-gray-800 rounded w-full focus-within:ring-2 ring-purple-500',
+        className
+      )}
     >
       { children }
     </div>
