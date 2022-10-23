@@ -1,7 +1,9 @@
 
-import { FormEvent, useState } from 'react';
+import { FormEvent, useState, useContext } from 'react';
 import { Link, useHistory } from 'react-router-dom';
 import { CheckedState } from '@radix-ui/react-checkbox';
+
+import { AuthContext } from '../contexts/AuthContext';
 
 import { Logo } from '../svgs/Logo';
 import { GoogleIcon } from '../svgs/GoogleIcon';
@@ -16,6 +18,7 @@ import { Button } from '../components/Button';
 export function SignIn(){
   const [checkboxValue, setCheckboxValue] = useState<CheckedState>(false);
   const history = useHistory();
+  const { signInWithGoogle } = useContext(AuthContext);
 
   function handleSubmit(event : FormEvent){
     event.preventDefault();
@@ -77,7 +80,7 @@ export function SignIn(){
             <div className='h-[1px] flex-1 bg-gray-500' />
           </div>
 
-          <Button.Root secondary className='mt-6'>
+          <Button.Root secondary className='mt-6' type='button' onClick={signInWithGoogle}>
             <Button.Icon>
               <GoogleIcon />
             </Button.Icon>

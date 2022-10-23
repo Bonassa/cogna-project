@@ -1,6 +1,6 @@
 
 import { clsx } from "clsx";
-import { ImgHTMLAttributes } from "react";
+import { ButtonHTMLAttributes, ImgHTMLAttributes } from "react";
 import { Text } from '../Text';
 
 interface HeaderRootProps {
@@ -17,7 +17,7 @@ interface HeaderLabelProps {
   subtitle?: string;
 }
 
-interface HeaderIconProps {
+interface HeaderIconProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children?: React.ReactNode;
 }
 
@@ -56,9 +56,12 @@ function HeaderLabel({ title, subtitle } : HeaderLabelProps){
   )
 }
 
-function HeaderIcon({ children } : HeaderIconProps){
+function HeaderIcon({ children, ...rest } : HeaderIconProps){
   return (
-    <button className="text-gray-300">
+    <button 
+      className="text-gray-300"
+      { ...rest }
+    >
       { children }
     </button>
   )

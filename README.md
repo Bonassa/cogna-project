@@ -37,3 +37,17 @@ npm install @radix-ui/react-checkbox
 
 npm install react-router-dom@5
 npm i --save-dev @types/react-router-dom
+
+npm install --save-dev tailwind-scrollbar
+
+npm install firebase
+
+## Todo
+
+ - [] Login com email e senha
+ - [] Criar conta com email e senha
+ - [] Chat (https://www.youtube.com/watch?v=k4mjF4sPITE&list=WL&index=12&t=3422s)
+ - [] Arrumar o README
+ - [] Colocar as keys do firebase em um .env
+ - [] Possibilitar colocar um foto e alterar o perfil (nome)
+

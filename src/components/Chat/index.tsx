@@ -15,7 +15,18 @@ export function Chat(){
       </Header.Root>
 
       {/* Não vai poder ser flex-1, tenho que calcular o tamanho e colocar com o width */}
-      <div className="flex flex-1">
+      <div className="flex flex-1 flex-col-reverse gap-2 pt-4 overflow-y-auto scrollbar-thin scrollbar-track-transparent scrollbar-thumb-gray-500">
+        <Message sender text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s," />
+        <Message sender text="Lorem Ipsum" />
+        <Message text="Lorem Ipsum" />
+        <Message text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s," />
+        <Message sender text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s," />
+        <Message sender text="Lorem Ipsum" />
+        <Message text="Lorem Ipsum" />
+        <Message text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s," />
+        <Message sender text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s," />
+        <Message sender text="Lorem Ipsum" />
+        <Message text="Lorem Ipsum" />
         <Message text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s," />
       </div>
 

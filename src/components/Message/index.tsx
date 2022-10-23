@@ -10,13 +10,21 @@ interface MessageProps {
 export function Message({ text, sender = false } : MessageProps){
   return (
     <div className={clsx(
-      'py-4 pr-6 pl-4 max-w-[60%] text-justify',
+      'flex flex-row ml-8 mr-[5rem]',
       {
-        'bg-gray-600' : sender === false,
-        'bg-purple-500' : sender === true
+        'justify-start': sender === false,
+        'justify-end': sender === true,
       }
     )}>
-      <Text>{ text }</Text>
+      <div className={clsx(
+        'py-4 pr-6 pl-4 max-w-[60%] h-fit w-fit text-justify rounded-xl',
+        {
+          'bg-gray-600 rounded-tl-none' : sender === false,
+          'bg-purple-500 rounded-tr-none' : sender === true
+        }
+      )}>
+        <Text size='sm'>{ text }</Text>
+      </div>
     </div>
   )
 }
