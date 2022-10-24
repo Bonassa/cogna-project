@@ -8,6 +8,7 @@ import { AuthContext } from '../contexts/AuthContext';
 import { Logo } from '../svgs/Logo';
 import { GoogleIcon } from '../svgs/GoogleIcon';
 import { EnvelopeIcon, LockClosedIcon } from '@heroicons/react/24/outline';
+import { toast } from 'react-toastify';
 
 import { Heading } from '../components/Heading';
 import { Text } from '../components/Text';
@@ -17,12 +18,20 @@ import { Button } from '../components/Button';
 
 export function SignIn(){
   const [checkboxValue, setCheckboxValue] = useState<CheckedState>(false);
+  const [email, setEmail] = useState('');
+  const [password, setPassword] = useState('');
   const history = useHistory();
-  const { signInWithGoogle } = useContext(AuthContext);
+  const { signInWithGoogle, signInWithEmail, loadingAuth } = useContext(AuthContext);
 
   function handleSubmit(event : FormEvent){
     event.preventDefault();
-    history.push('/home');
+    
+    if(email !== '' && password !== ''){
+      signInWithEmail({email: email, password: password})
+      .catch(() => {
+        toast.error('Informações inválidas')
+      })
+    }
   }
 
   return(
@@ -40,10 +49,16 @@ export function SignIn(){
             <Text>Endereço de e-mail</Text>
 
             <TextInput.Root>
-              <TextInput.Icon>
+              <TextInput.Icon filed={!!email}>
                 <EnvelopeIcon />
               </TextInput.Icon>
-              <TextInput.Input id='email' type='email' placeholder='johndoe@example.com' />
+              <TextInput.Input 
+                id='email' 
+                type='email' 
+                placeholder='johndoe@example.com'
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+              />
             </TextInput.Root>
           </label>
 
@@ -51,10 +66,16 @@ export function SignIn(){
             <Text>Sua senha</Text>
 
             <TextInput.Root>
-              <TextInput.Icon>
+              <TextInput.Icon filed={!!password}>
                 <LockClosedIcon />
               </TextInput.Icon>
-              <TextInput.Input id='password' type='password' placeholder='**************' />
+              <TextInput.Input 
+                id='password' 
+                type='password' 
+                placeholder='**************' 
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+              />
             </TextInput.Root>
           </label>
 
@@ -69,7 +90,7 @@ export function SignIn(){
           </div>
 
           <Button.Root type='submit' className='mt-6'>
-            <Button.Label value='Acessar a plataforma' />
+            <Button.Label value='Acessar a plataforma' loading={loadingAuth} />
           </Button.Root>
         </form>
 

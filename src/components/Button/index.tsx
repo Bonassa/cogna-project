@@ -2,6 +2,7 @@
 import { Slot } from '@radix-ui/react-slot'
 import { clsx } from 'clsx';
 import { ButtonHTMLAttributes } from 'react';
+import { Spinner } from 'phosphor-react'
 
 interface ButtonRootProps extends ButtonHTMLAttributes<HTMLButtonElement> {
   children: React.ReactNode;
@@ -12,6 +13,7 @@ interface ButtonRootProps extends ButtonHTMLAttributes<HTMLButtonElement> {
 interface ButtonLabelProps {
   value: string;
   className?: string;
+  loading?: boolean;
 }
 
 interface ButtonIconProps {
@@ -24,7 +26,7 @@ function ButtonRoot({ children, className, secondary = false, ...rest } : Button
         'h-12 flex items-center justify-center rounded transition-colors duration-300 gap-2',
         {
           'bg-purple-500 hover:bg-purple-600' : secondary === false,
-          'bg-transparent hover:bg-white border-2 border-white group': secondary === true
+          'bg-transparent hover:bg-white border-2 border-white group': secondary === true,
         },
         className
       )} 
@@ -35,7 +37,13 @@ function ButtonRoot({ children, className, secondary = false, ...rest } : Button
   )
 }
 
-function ButtonLabel({ value, className } : ButtonLabelProps){
+function ButtonLabel({ value, className, loading = false } : ButtonLabelProps){
+  if(loading){
+    return (
+      <Spinner className='animate-spin' size={24} color='#FFF' />
+    )
+  }
+  
   return (
     <span className={clsx(
       'font-sans, text-sm font-semibold text-gray-100 leading-4 group-hover:text-gray-900',

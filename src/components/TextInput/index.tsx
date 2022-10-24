@@ -9,6 +9,7 @@ export interface TextInputRootProps {
 }
 
 export interface TextInputIconProps {
+  filed?: boolean;
   children: ReactNode;
 }
 
@@ -30,7 +31,13 @@ function TextInputRoot({ children, className } : TextInputRootProps) {
 
 function TextInputIcon(props : TextInputIconProps) {
   return (
-    <Slot className='h-6 w-6 text-gray-500' >
+    <Slot className={clsx(
+        'h-6 w-6 text-gray-500',
+        {
+          'text-purple-500': props.filed === true
+        }
+      )} 
+    >
       { props.children }
     </Slot>
   );

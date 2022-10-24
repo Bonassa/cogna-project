@@ -5,9 +5,10 @@ import {
   signInWithEmailAndPassword, 
   signInWithPopup, 
   GoogleAuthProvider, 
-  User, 
   AuthError,
-  signOut as signOutFromFirebase
+  signOut as signOutFromFirebase,
+  UserCredential,
+  createUserWithEmailAndPassword
 } from 'firebase/auth';
 import {
   doc,
@@ -21,6 +22,8 @@ interface AuthContextProps {
   loading: boolean;
   loadingAuth: boolean;
   signInWithGoogle: () => Promise<void>;
+  signInWithEmail: (data : SignInData) => Promise<void | AuthError>;
+  signUpWithEmail: (data : SignUpData) => Promise<void | AuthError>;
   signOut: () => Promise<void>;
 }
 
@@ -32,7 +35,18 @@ type UserType = {
   uid: string;
   name: string;
   email: string;
-  avatarUrl: string | null;
+  avatarUrl: string;
+}
+
+type SignInData = {
+  email: string;
+  password: string;
+}
+
+type SignUpData = {
+  name: string;
+  email: string;
+  password: string;
 }
 
 export const AuthContext = createContext({} as AuthContextProps);
@@ -71,7 +85,6 @@ export function AuthProvider({ children } : AuthProviderProps){
 
   async function signInWithGoogle(){
     const provider = new GoogleAuthProvider();
-    setLoadingAuth(true);
 
     signInWithPopup(auth, provider)
     .then( async (result) => {
@@ -83,7 +96,7 @@ export function AuthProvider({ children } : AuthProviderProps){
         uid: result.user.uid,
         name: result.user.displayName as string,
         email: result.user.email as string,
-        avatarUrl: result.user.photoURL
+        avatarUrl: result.user.photoURL as string
       }
 
       if(userProfile.exists() === false){
@@ -94,7 +107,61 @@ export function AuthProvider({ children } : AuthProviderProps){
       setUser(userInfos);
     })
     .catch((error) => console.log(error))
-    .finally(() => setLoadingAuth(false))
+  }
+
+  async function signInWithEmail({ email, password } : SignInData): Promise<void | AuthError>{
+    setLoadingAuth(true);
+
+    await signInWithEmailAndPassword(auth, email, password)
+    .then( async (value : UserCredential) => {
+      const uid = value.user.uid;
+      const docUserRef = doc(firestore, 'users', uid);
+      const userProfile = await getDoc(docUserRef);
+
+      let data: UserType = {
+        uid: uid,
+        name: userProfile.data()?.name,
+        email: userProfile.data()?.email,
+        avatarUrl: userProfile.data()?.avatarUrl,
+      }
+      
+      storageUser(uid);
+      setUser(data);
+    })
+    .catch((error: AuthError) => {
+      throw new Error(error.code);
+    })
+    .finally(() => {
+      setLoadingAuth(false);
+    })
+  }
+
+  async function signUpWithEmail({ email, name, password } : SignUpData): Promise<void | AuthError>{
+    setLoadingAuth(true);
+
+    await createUserWithEmailAndPassword(auth, email, password)
+    .then( async (value) => {
+      const uid = value.user.uid;
+
+      let data: UserType = {
+        uid: uid,
+        email: email,
+        name: name,
+        avatarUrl: 'https://firebasestorage.googleapis.com/v0/b/cogna-project.appspot.com/o/images%2Fdefault%2Favatar.png?alt=media&token=f2e9f626-06f7-43c3-be6b-04116be7e74b'
+      }
+
+      await setDoc(doc(firestore, `users/${uid}`), data)
+      .then(() => {
+        storageUser(uid);
+        setUser(data);
+      })
+    })
+    .catch((error : AuthError) => {
+      throw new Error(error.code);
+    })
+    .finally(() => {
+      setLoadingAuth(false);
+    })
   }
 
   async function signOut(){
@@ -117,6 +184,8 @@ export function AuthProvider({ children } : AuthProviderProps){
         loading,
         loadingAuth,
         signInWithGoogle,
+        signInWithEmail,
+        signUpWithEmail,
         signOut
       }} 
     >

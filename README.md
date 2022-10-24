@@ -42,6 +42,8 @@ npm install --save-dev tailwind-scrollbar
 
 npm install firebase
 
+npm install --save react-toastify
+
 ## Todo
 
  - [] Login com email e senha

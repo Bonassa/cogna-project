@@ -9,13 +9,13 @@ import { TextInput } from "../TextInput"
 import { ChatCard } from '../ChatCard'
 
 export function Sidebar(){
-  const { signOut } = useContext(AuthContext);
+  const { signOut, user } = useContext(AuthContext);
 
   return (
     <div className="flex flex-col flex-1 border-r-2 border-gray-500">
       <Header.Root>
-        <Header.Image src="https://github.com/Bonassa.png" />
-        <Header.Label title="Renan Bonassa" subtitle="#12442" />
+        <Header.Image src={user?.avatarUrl} />
+        <Header.Label title={user?.name as string} subtitle={user?.uid} />
         <Header.Icon type='button' onClick={signOut}>
           <SignOut size={24} weight='bold' />
         </Header.Icon>
