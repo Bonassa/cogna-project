@@ -3,40 +3,51 @@ import { useState, useEffect, useContext } from "react";
 import { firestore } from "../../services/firebaseConnection";
 import { doc, onSnapshot } from 'firebase/firestore';
 
-import { AuthContext, UserType } from "../../contexts/AuthContext";
+import { AuthContext } from "../../contexts/AuthContext";
+import { ChatContext } from "../../contexts/ChatContext";
 
 import { ChatCard } from "../ChatCard";
+
+interface ContactProps {
+  data: any;
+  combinedUid: string;
+}
 
 export function UserChats() {
   const [userChats, setUserChats] = useState<any[]>([]);
   const { user } = useContext(AuthContext);
+  const { setSelectedUserUid, setSelectedUser } = useContext(ChatContext);
 
   useEffect(() => {
-    function getChats(){
-      if(user){
-        const unsub = onSnapshot(doc(firestore, 'userChats', user?.uid), (doc) => {
-          console.log(doc.data())
-        })
-
-        return () => {
-          unsub();
+    if(user){
+      const unsub = onSnapshot(
+        doc(firestore, 'usersChats', user.uid), (doc) => {
+          setUserChats(doc.data() as any[])
         }
+      )
+
+      return () => {
+        unsub();
       }
     }
-
-    getChats();
   }, [])
+
+  function handleContactSelected({ combinedUid, data }: ContactProps){
+    setSelectedUser(data);
+    setSelectedUserUid(combinedUid);
+  }
 
   return (
     <>
-      <ChatCard.Root>
-        <ChatCard.Image src='https://images.pexels.com/photos/837358/pexels-photo-837358.jpeg?auto=compress&cs=tinysrgb&w=1600' />
-        <ChatCard.Label title='Danilo Gomes' subtitle='Depois a gente conversa' />
-      </ChatCard.Root>
-      <ChatCard.Root>
-        <ChatCard.Image src='https://images.pexels.com/photos/1848565/pexels-photo-1848565.jpeg?auto=compress&cs=tinysrgb&w=1600' />
-        <ChatCard.Label title='Isabela Matos' subtitle='Lorem Ipsum' />
-      </ChatCard.Root>
+      {Object.entries(userChats)?.sort((a, b) => b[1].date - a[1].date).map((chat) => (
+        <ChatCard.Root key={chat[0]} onClick={() => handleContactSelected({
+          combinedUid: chat[0],
+          data: chat[1].userInfo
+        })} >
+          <ChatCard.Image src={chat[1].userInfo.avatarUrl} />
+          <ChatCard.Label title={chat[1].userInfo.name} subtitle={chat[1].userInfo.lastMessage?.text} />
+        </ChatCard.Root>
+      ))}
     </>
   )
 }

@@ -10,7 +10,8 @@ import {
   getDoc,
   doc,
   setDoc,
-  updateDoc
+  updateDoc,
+  serverTimestamp
 } from 'firebase/firestore';
 
 import { AuthContext, UserType } from '../../contexts/AuthContext'
@@ -59,6 +60,11 @@ export function Sidebar(){
         await setDoc(doc(firestore, 'chats', combinedId), { messages: [] });
         await updateDoc(doc(firestore, 'usersChats', user.uid), {
           [combinedId + '.userInfo']: userSearch,
+          [combinedId + ".date"]: serverTimestamp(),
+        })
+        await updateDoc(doc(firestore, 'usersChats', userSearch.uid), {
+          [combinedId + '.userInfo']: user,
+          [combinedId + ".date"]: serverTimestamp(),
         })
       }
     }
