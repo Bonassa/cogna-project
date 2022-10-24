@@ -31,7 +31,7 @@ interface AuthProviderProps {
   children: React.ReactNode;
 }
 
-type UserType = {
+export type UserType = {
   uid: string;
   name: string;
   email: string;
@@ -101,6 +101,7 @@ export function AuthProvider({ children } : AuthProviderProps){
 
       if(userProfile.exists() === false){
         await setDoc(doc(firestore, `users/${uid}`), userInfos)
+        await setDoc(doc(firestore, `usersChats/${uid}`), {})
       }
 
       storageUser(uid);
@@ -150,6 +151,7 @@ export function AuthProvider({ children } : AuthProviderProps){
         avatarUrl: 'https://firebasestorage.googleapis.com/v0/b/cogna-project.appspot.com/o/images%2Fdefault%2Favatar.png?alt=media&token=f2e9f626-06f7-43c3-be6b-04116be7e74b'
       }
 
+      await setDoc(doc(firestore, `usersChats/${uid}`), {})
       await setDoc(doc(firestore, `users/${uid}`), data)
       .then(() => {
         storageUser(uid);

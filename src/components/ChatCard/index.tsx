@@ -1,9 +1,9 @@
 
 import { clsx } from "clsx";
-import { ImgHTMLAttributes } from "react";
+import { ImgHTMLAttributes, HTMLAttributes } from "react";
 import { Text } from '../Text';
 
-interface ChatCardRootProps {
+interface ChatCardRootProps extends HTMLAttributes<HTMLDivElement> {
   children: React.ReactNode;
   className?: string;
 }
@@ -17,9 +17,11 @@ interface ChatCardLabelProps {
   subtitle?: string;
 }
 
-function ChatCardRoot({ children, className } : ChatCardRootProps){
+function ChatCardRoot({ children, className, ...rest } : ChatCardRootProps){
   return (
-    <div className={clsx(
+    <div
+      { ...rest } 
+      className={clsx(
         "bg-transparent px-3 py-3 flex flex-row items-center hover:bg-gray-600 cursor-pointer",
         className
       )} 
