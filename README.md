@@ -19,7 +19,6 @@ Este projeto foi desenvolvido como parte do processo seletivo para a empresa Cog
 A prototipação das telas foi feita com a ferramenta `Figma` e seus design estão disponíveis [aqui](https://www.figma.com/file/vkJdGi0OwKi3QrAcO2WF74/Cogna?node-id=0%3A1)
 
 <iframe style="border: 1px solid rgba(0, 0, 0, 0.1);" width="800" height="450" src="https://www.figma.com/embed?embed_host=share&url=https%3A%2F%2Fwww.figma.com%2Ffile%2FvkJdGi0OwKi3QrAcO2WF74%2FCogna%3Fnode-id%3D0%253A1" allowfullscreen>
-</iframe>
 
 ### Transformação de um SVG em um componente React
 Usando o site [`transform.tools`](https://transform.tools/) é possível copiar o logo SVG do React lá do Figma, e transformar em um componente React para utilizar na interface
