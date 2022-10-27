@@ -3,19 +3,33 @@ import { doc, onSnapshot } from "firebase/firestore";
 import { useEffect, useContext, useState } from "react";
 
 import { ChatContext } from "../../contexts/ChatContext";
+import { AuthContext } from "../../contexts/AuthContext";
 import { firestore } from "../../services/firebaseConnection";
 
 import { Message } from "../Message";
 
+interface MessageProps {
+  typedMessage: string;
+  senderId: string;
+  date: Date;
+}
+
 export function Messages(){
   const { selectedUserUid } = useContext(ChatContext);
-  const [messages, setMessages] = useState();
+  const { user } = useContext(AuthContext);
+  const [messages, setMessages] = useState<MessageProps[]>([]);
 
   useEffect(() => {
     if(selectedUserUid){
       const unsub = onSnapshot(
         doc(firestore, 'chats', selectedUserUid), (doc) => {
-          doc.exists() && setMessages(doc.data().messages);
+          if(doc.exists()){
+            let data: MessageProps[] = [
+              ...doc.data().messages
+            ]
+
+            setMessages(data.reverse());
+          }
         }
       )
   
@@ -25,27 +39,15 @@ export function Messages(){
     }
   }, [selectedUserUid])
 
-  console.log(messages);
-
   return (
     <>
-      {/* <div className="messages">
-        {messages.map((m) => (
-          <Message message={m} key={m.id} />
-        ))}
-      </div> */}
-      <Message sender text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s," />
-      <Message sender text="Lorem Ipsum" />
-      <Message text="Lorem Ipsum" />
-      <Message text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s," />
-      <Message sender text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s," />
-      <Message sender text="Lorem Ipsum" />
-      <Message text="Lorem Ipsum" />
-      <Message text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s," />
-      <Message sender text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s," />
-      <Message sender text="Lorem Ipsum" />
-      <Message text="Lorem Ipsum" />
-      <Message text="Lorem Ipsum is simply dummy text of the printing and typesetting industry. Lorem Ipsum has been the industry's standard dummy text ever since the 1500s," />
+      {messages.map((message, index) => (
+        <Message 
+          key={index}
+          text={message?.typedMessage}
+          sender={message.senderId === user?.uid}
+        />
+      ))}
     </>
   )
 }

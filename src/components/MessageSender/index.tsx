@@ -1,5 +1,5 @@
 
-import { useState, useContext, FormEvent } from "react";
+import { useState, useContext, FormEvent, KeyboardEvent } from "react";
 import { firestore } from "../../services/firebaseConnection";
 import { arrayUnion, doc, updateDoc, Timestamp } from 'firebase/firestore';
 
@@ -17,7 +17,7 @@ export function MessageSender(){
 
   async function handleMessageSend(event: FormEvent){
     event.preventDefault();
-    if(selectedUserUid){
+    if(selectedUserUid && typedMessage.length > 0){
       await updateDoc(doc(firestore, "chats", selectedUserUid), {
         messages: arrayUnion({
           typedMessage,
@@ -26,7 +26,9 @@ export function MessageSender(){
         }),
       });
     }
+    setTypedMessage('')
   }
+
 
   return (
     <form className='flex flex-row mt-8 mr-6 mb-6 ml-8' onSubmit={handleMessageSend}>
@@ -37,7 +39,10 @@ export function MessageSender(){
           onChange={(e) => setTypedMessage(e.target.value)}
         />
       </TextInput.Root>
-      <Button.Root className='rounded-full'>
+      <Button.Root 
+        className='rounded-full'
+        type="submit"
+      >
         <Button.Icon>
           <ArrowRight width={48} size={24} weight='bold' color='#FFF' />
         </Button.Icon>
